@@ -1,14 +1,19 @@
 const express = require('express');
-const response = require('../helpers/response')
+const userRoutes = require('./user.route');
+const authRoutes = require('./auth.route');
+const adminRoutes = require('./admin.route');
 
-const router = express.Router();
+const router = express.Router(); 
 
-router.get('/', (req, res, next) => {
-  try {
-    res.json(response('error', null, {msg:'errorrr..'}, 404));
-  } catch (error) {
-    next(error)
-  }
-});
+
+//check API's sanity
+router.get('/health-check', (req, res) => res.send('OK'));
+
+
+//mounting all routes
+
+router.use('/user', userRoutes);
+router.use('/auth', authRoutes);
+router.use('/admin', adminRoutes);
 
 module.exports = router;
