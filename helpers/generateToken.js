@@ -1,4 +1,4 @@
-const jwt = require('jwt-simple');
+const jwt = require('jsonwebtoken');
 const moment = require('moment-timezone');
 const { jwtExpirationInterval, jwtSecret } = require('../config/env');
 
