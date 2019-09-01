@@ -3,7 +3,7 @@ const httpStatus = require('http-status');
 const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const generateToken = require('../helpers/generateToken');
-
+const getdefaultProfilePic = require('../helpers/getProfilePic');
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema(
     },
     profilePic: {
       type: String,
-      default: getAvatar(this.email)
+      default: getdefaultProfilePic(this.email)
     }
   },
   { timestamps: true }
