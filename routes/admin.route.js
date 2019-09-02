@@ -1,11 +1,24 @@
 const express = require('express');
-const response = require('../helpers/response');
+const { celebrate: validate } = require('celebrate');
 const adminCtrl = require('../controllers/admin.controller');
-
+const auth = require('../middlewares/auth.middleware');
 const router = express.Router();
+const validation = require('../validations/user.validation');
 
-// router.get('/', (req, res, next) => {});
+router
+  .route('/login')
+  .post(
+    validate(validation.loginUser, { abortEarly: false }),
+    adminCtrl.login
+  );
 
-router.route('/login').post(adminCtrl.login);
+// router.use(auth);
+
+router
+  .route('/signup')
+  .post(
+    validate(validation.createUser, { abortEarly: false }),
+    adminCtrl.signup
+  );
 
 module.exports = router;
