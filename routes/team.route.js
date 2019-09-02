@@ -49,7 +49,7 @@ router.route('/:id').get(teamCtrl.getSingleTeam);
 router
   .route('/')
   .post(
-    validate(validation.createTeam, { abortEarly: false }),
+    validate(validation.createOrUpdateTeam, { abortEarly: false }),
     teamCtrl.create
   );
 
@@ -58,4 +58,16 @@ router
  * DELETE api/v1/team
  */
 router.route('/:id').delete(teamCtrl.delete);
+
+/**
+ * route to update single team
+ * PUT api/v1/team
+ */
+router
+  .route('/:id')
+  .put(
+    validate(validation.createOrUpdateTeam, { abortEarly: false }),
+    teamCtrl.update
+  );
+
 module.exports = router;

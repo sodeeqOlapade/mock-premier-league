@@ -94,3 +94,14 @@ exports.delete = async (req, res, next) => {
     next(error);
   }
 };
+
+exports.update = async (req, res, next) => {
+  try {
+    const team = await req.team.update(req.body);
+    res.json(
+      response('update succesful', team.transform(), null, httpStatus.OK)
+    );
+  } catch (error) {
+    next(error);
+  }
+};
