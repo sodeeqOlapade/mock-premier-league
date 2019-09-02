@@ -6,7 +6,7 @@ const decodeToken = require('../helpers/decodeToken');
 
 const auth = async (req, res, next) => {
   try {
-    const { payload } = decodeToken(req);
+    const { payload } = decodeToken(req, res);
     const { sub } = payload;
     const user = await User.getById(sub);
     if (user) {

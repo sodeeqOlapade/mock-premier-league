@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const generateToken = require('../helpers/generateToken');
 const getdefaultProfilePic = require('../helpers/getProfilePic');
+const APIError = require('../helpers/APIError');
 const UserSchema = new mongoose.Schema(
   {
     name: {
@@ -89,8 +90,8 @@ UserSchema.statics = {
   async loginAndGenerateToken(options) {
     const { email, password } = options;
     if (!email) {
-      throw new Error({
-        message: 'Email is required'
+      throw new APIError({
+        message: 'An email is required to generate a token'
       });
     }
 
@@ -99,11 +100,11 @@ UserSchema.statics = {
       if (user && (await user.passwordMatches(password))) {
         return { user, accessToken: `Bearer ${user.getToken()}` };
       }
-      err.message = 'Incorrect Credentials';
     }
-    throw new Error({
+    throw new APIError({
       status: httpStatus.UNAUTHORIZED,
-      isPublic: true
+      isPublic: true,
+      message: 'Incorrect Credentials'
     });
   },
   /**
