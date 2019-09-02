@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const httpStatus = require('http-status');
 const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const APIError = require('../helpers/APIError');
+const response = require('../helpers/response');
 const TeamSchema = new mongoose.Schema(
   {
     name: {
@@ -64,8 +66,49 @@ const TeamSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-TeamSchema.methods = {};
+TeamSchema.methods = {
+  /**
+   * Returns team object with only selected fields
+   */
+  transform() {
+    // add feilds to be selected
+    const fields = [
+      'id',
+      'name',
+      'manager',
+      'homeGround',
+      'leaguePosition',
+      'homeWin',
+      'awayWin',
+      'win',
+      'loss',
+      'draw',
+      'points',
+      'goals',
+      'conceded',
+      'isDeleted'
+    ];
+    return pick(fields, this);
+  }
+};
 
-TeamSchema.statics = {};
+TeamSchema.statics = {
+  async getById(id) {
+    try {
+      if (!mongoose.Types.ObjectId.isValid(id)) {
+        throw new APIError({
+          message: 'No such team exist'
+        });
+      }
+      const team = await this.findById(id).exec(); //returns user if found otherwise null
+      if (team) {
+        return team;
+      }
+      return team; //team will be null here
+    } catch (error) {
+      throw new APIError(error);
+    }
+  }
+};
 
 module.exports = mongoose.model('Team', TeamSchema);
