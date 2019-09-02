@@ -11,9 +11,8 @@ const APIError = require('../helpers/APIError');
  */
 router.use(auth);
 
-
 /**
- * this middleware ensures only an admin gets 
+ * this middleware ensures only an admin gets
  * throught to the team route
  */
 router.use((req, res, next) => {
@@ -54,4 +53,9 @@ router
     teamCtrl.create
   );
 
+/**
+ * route to delete single team
+ * DELETE api/v1/team
+ */
+router.route('/:id').delete(teamCtrl.delete);
 module.exports = router;

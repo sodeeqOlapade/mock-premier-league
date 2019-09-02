@@ -62,7 +62,9 @@ exports.create = async (req, res, next) => {
 exports.getAllTeam = async (req, res, next) => {
   try {
     let teams = await Team.find({});
-    teams = teams.map(team => team.transform());
+    teams = teams.filter(team => {
+      if (!team.isDeleted) return team.transform();
+    });
     return res.json(
       response('Request for all teams sucessful', teams, null, httpStatus.OK)
     );
@@ -76,6 +78,18 @@ exports.getSingleTeam = async (req, res, next) => {
     let team = req.team;
     team = team.transform();
     return res.json(response('Request sucessful', team, null, httpStatus.OK));
+  } catch (error) {
+    next(error);
+  }
+};
+
+exports.delete = async (req, res, next) => {
+  try {
+    let deletedTeam = await Team.deleteOne(req.team._id);
+    deletedTeam = deletedTeam.transform();
+    return res.json(
+      response('Delete sucessful', deletedTeam, null, httpStatus.OK)
+    );
   } catch (error) {
     next(error);
   }

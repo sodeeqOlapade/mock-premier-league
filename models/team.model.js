@@ -108,6 +108,11 @@ TeamSchema.statics = {
     } catch (error) {
       throw new APIError(error);
     }
+  },
+
+  async deleteOne(id) {
+    const team = await this.findByIdAndRemove(id);
+    return team;
   }
 };
 
