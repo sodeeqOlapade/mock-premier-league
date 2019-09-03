@@ -4,6 +4,8 @@ const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const APIError = require('../helpers/APIError');
 const response = require('../helpers/response');
+const Team = require('../models/team.model');
+
 const FixtureSchema = new mongoose.Schema(
   {
     home: {
@@ -56,7 +58,8 @@ const FixtureSchema = new mongoose.Schema(
     },
     winner: {
       type: mongoose.Types.ObjectId,
-      refs: 'Team'
+      refs: 'Team',
+      default: null
     },
     isDraw: {
       type: Boolean,
@@ -64,8 +67,8 @@ const FixtureSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['not-started', 'live', 'completed', 'postponed'],
-      default: 'not-started'
+      enum: ['pending', 'live', 'completed', 'postponed'],
+      default: 'pending'
     },
     isDeleted: {
       type: Boolean,
@@ -74,6 +77,75 @@ const FixtureSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+FixtureSchema.pre('save', async next => {
+  if (this.status === 'completed') {
+    const homeTeam = await Team.getById(this.home);
+    const awayTeam = await Team.getById(this.away);
+
+    //updating total number of games played by each team
+    homeTeam.games += 1;
+    awayTeam.games += 1;
+
+    homeTeam.goals += this.homeTotalGoal;
+    awayTeam.goals += this.awayTotalGoal;
+
+    homeTeam.conceded += this.awayTotalGoal;
+    awayTeam.conceded += this.homeTotalGoal;
+
+    if (this.isDraw) {
+      //update draw counts on teams
+      homeTeam.draw += 1;
+      awayTeam.draw += 1;
+
+      //update points after win
+      homeTeam.points += 1;
+      awayTeam.points += 1;
+    }
+
+    if (this.winner === homeTeam._id) {
+      /**
+       * update win count for home team
+       * and loss count for away team
+       */
+      homeTeam.win += 1;
+      awayTeam.loss += 1;
+
+      //update points for team
+      homeTeam.points += 3;
+
+      //update homeWins for home team
+      //update awayLoss for away team
+      homeTeam.homeWin += 1;
+      awayTeam.awayLoss += 1;
+    }
+
+    if (this.winner === awayTeam._id) {
+      /**
+       * update win count for away team
+       * and loss count for home team
+       */
+      awayTeam.win += 1;
+      homeTeam.loss += 1;
+
+      //update points for team
+      awayTeam.points += 3;
+
+      //update awayWin for away team
+      //update homeLoss for home team
+      awayTeam.awayWin += 1;
+      homeTeam.homeLoss += 1;
+    }
+
+    //calculating the current position of teams
+    homeTeam.position = homeTeam.getPosition(homeTeam._id);
+    awayTeam.position = awayTeam.getPosition(awayTeam._id);
+
+    homeTeam.save();
+    awayTeam.save();
+    next();
+  }
+});
 
 FixtureSchema.methods = {
   /**
