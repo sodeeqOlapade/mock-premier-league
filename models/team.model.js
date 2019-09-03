@@ -30,7 +30,15 @@ const TeamSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    homeLoss: {
+      type: Number,
+      default: 0
+    },
     awayWin: {
+      type: Number,
+      default: 0
+    },
+    awayLoss: {
       type: Number,
       default: 0
     },
@@ -47,6 +55,10 @@ const TeamSchema = new mongoose.Schema(
       default: 0
     },
     points: {
+      type: Number,
+      default: 0
+    },
+    games: {
       type: Number,
       default: 0
     },
@@ -92,8 +104,8 @@ TeamSchema.methods = {
   },
 
   /**
-   * 
-   * @param {req.body} obj 
+   *
+   * @param {req.body} obj
    * this method does the team update
    * it's available on every instance
    */
@@ -103,6 +115,14 @@ TeamSchema.methods = {
     }
     await this.save();
     return this;
+  },
+
+  async getPosition(id) {
+    const teams = await this.find({})
+      .sort((a, b) => b.points - a.points)
+      .map(team => team._id);
+
+    return teams.indexOf(id) + 1;
   }
 };
 
