@@ -74,12 +74,17 @@ exports.create = async (req, res, next) => {
 
 exports.getAll = async (req, res, next) => {
   try {
-    let teams = await Team.find({});
-    teams = teams.filter(team => {
-      if (!team.isDeleted) return team.transform();
+    let fixtures = await Fixture.find({});
+    fixtures = fixtures.filter(fixture => {
+      if (!fixture.isDeleted) return fixture.transform();
     });
     return res.json(
-      response('Request for all teams sucessful', teams, null, httpStatus.OK)
+      response(
+        'Request for all fixtures sucessful',
+        fixtures,
+        null,
+        httpStatus.OK
+      )
     );
   } catch (error) {
     next(error);
@@ -88,9 +93,11 @@ exports.getAll = async (req, res, next) => {
 
 exports.getSingle = async (req, res, next) => {
   try {
-    let team = req.team;
-    team = team.transform();
-    return res.json(response('Request sucessful', team, null, httpStatus.OK));
+    let fixture = req.fixture;
+    fixture = fixture.transform();
+    return res.json(
+      response('Request sucessful', fixture, null, httpStatus.OK)
+    );
   } catch (error) {
     next(error);
   }
@@ -98,10 +105,10 @@ exports.getSingle = async (req, res, next) => {
 
 exports.delete = async (req, res, next) => {
   try {
-    let deletedTeam = await Team.deleteOne(req.team._id);
-    deletedTeam = deletedTeam.transform();
+    let deletedFixture = await Fixture.deleteOne(req.fixture._id);
+    deletedFixture = deletedFixture.transform();
     return res.json(
-      response('Delete sucessful', deletedTeam, null, httpStatus.OK)
+      response('Delete sucessful', deletedFixture, null, httpStatus.OK)
     );
   } catch (error) {
     next(error);
@@ -110,9 +117,9 @@ exports.delete = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const team = await req.team.update(req.body);
+    const fixture = await req.fixture.update(req.body);
     res.json(
-      response('update succesful', team.transform(), null, httpStatus.OK)
+      response('update succesful', fixture.transform(), null, httpStatus.OK)
     );
   } catch (error) {
     next(error);
