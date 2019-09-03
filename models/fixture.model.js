@@ -64,7 +64,7 @@ const FixtureSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['not-started', 'live', 'finished', 'postponed'],
+      enum: ['not-started', 'live', 'completed', 'postponed'],
       default: 'not-started'
     },
     isDeleted: {

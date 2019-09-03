@@ -1,4 +1,5 @@
 const { Joi } = require('celebrate');
+const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const response = require('../helpers/response');
 const Fixture = require('../models/fixture.model');
@@ -26,6 +27,18 @@ exports.preLoad = async (req, res, next, id) => {
 exports.create = async (req, res, next) => {
   try {
     const { home, away, time } = req.body;
+    if (home === away) {
+      {
+        return res.json(
+          response(
+            'Same team cannot be in home and away position',
+            null,
+            { msg: 'Same team cannot be in home and away position' },
+            httpStatus.BAD_REQUEST
+          )
+        );
+      }
+    }
 
     if (
       !mongoose.Types.ObjectId.isValid(home) &&
@@ -117,6 +130,19 @@ exports.delete = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
+    const { home, away } = req.body;
+    if (home === away) {
+      {
+        return res.json(
+          response(
+            'Same team cannot be in home and away position',
+            null,
+            { msg: 'Same team cannot be in home and away position' },
+            httpStatus.BAD_REQUEST
+          )
+        );
+      }
+    }
     const fixture = await req.fixture.update(req.body);
     res.json(
       response('update succesful', fixture.transform(), null, httpStatus.OK)

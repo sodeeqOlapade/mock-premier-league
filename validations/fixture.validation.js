@@ -11,7 +11,7 @@ module.exports = {
         .min(2)
         .max(120)
         .required(),
-      Venue: Joi.string()
+      venue: Joi.string()
         .min(2)
         .max(120)
         .required(),
