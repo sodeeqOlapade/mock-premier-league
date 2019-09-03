@@ -28,7 +28,6 @@ exports.create = async (req, res, next) => {
     const { name, homeGround } = req.body;
 
     const teamExist = await Team.find({ $or: [{ name }, { homeGround }] });
-    console.log(teamExist.length);
 
     if (teamExist.length) {
       return res.json(
@@ -59,7 +58,8 @@ exports.create = async (req, res, next) => {
   }
 };
 
-exports.getAllTeam = async (req, res, next) => {
+
+exports.getAll = async (req, res, next) => {
   try {
     let teams = await Team.find({});
     teams = teams.filter(team => {
@@ -73,7 +73,7 @@ exports.getAllTeam = async (req, res, next) => {
   }
 };
 
-exports.getSingleTeam = async (req, res, next) => {
+exports.getSingle = async (req, res, next) => {
   try {
     let team = req.team;
     team = team.transform();
@@ -105,3 +105,4 @@ exports.update = async (req, res, next) => {
     next(error);
   }
 };
+

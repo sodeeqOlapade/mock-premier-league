@@ -31,5 +31,8 @@
     "nodemon": "^1.19.1",
     "ramda": "^0.26.1",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/joi": "^14.3.3"
   }
 }

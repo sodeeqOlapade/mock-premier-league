@@ -91,6 +91,12 @@ TeamSchema.methods = {
     return pick(fields, this);
   },
 
+  /**
+   * 
+   * @param {req.body} obj 
+   * this method does the team update
+   * it's available on every instance
+   */
   async update(obj) {
     for (key in obj) {
       this[key] = obj[key];
@@ -103,6 +109,10 @@ TeamSchema.methods = {
 TeamSchema.statics = {
   async getById(id) {
     try {
+      /**
+       * this ensures that the incoming id is
+       * a valid mongoose id
+       */
       if (!mongoose.Types.ObjectId.isValid(id)) {
         throw new APIError({
           message: 'No such team exist'

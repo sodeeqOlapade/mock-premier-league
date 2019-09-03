@@ -34,13 +34,13 @@ router.param('id', teamCtrl.preLoad);
  * route to GET all teams
  * GET api/v1/team
  */
-router.route('/').get(teamCtrl.getAllTeam);
+router.route('/').get(teamCtrl.getAll);
 
 /**
  * route to GET single team
  * GET api/v1/team/:id
  */
-router.route('/:id').get(teamCtrl.getSingleTeam);
+router.route('/:id').get(teamCtrl.getSingle);
 
 /**
  * route to create new team
