@@ -58,7 +58,6 @@ exports.create = async (req, res, next) => {
   }
 };
 
-
 exports.getAll = async (req, res, next) => {
   try {
     let teams = await Team.find({});
@@ -106,3 +105,12 @@ exports.update = async (req, res, next) => {
   }
 };
 
+exports.search = async (req, res, next) => {
+  try {
+    const results = await Team.search(req.query.search);
+
+    return res.json(response('Teams found', results, null, httpStatus.OK));
+  } catch (error) {
+    next(error);
+  }
+};

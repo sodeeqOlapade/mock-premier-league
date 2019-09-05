@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const APIError = require('../helpers/APIError');
 const response = require('../helpers/response');
+const escapeString = require('../helpers/escapeString');
 
 const TeamSchema = new mongoose.Schema(
   {
@@ -21,7 +22,8 @@ const TeamSchema = new mongoose.Schema(
     homeGround: {
       type: String,
       minlength: 2,
-      required: true
+      required: true,
+      unique: true
     },
     leaguePosition: {
       type: Number,
@@ -151,6 +153,33 @@ TeamSchema.statics = {
   async deleteOne(id) {
     const team = await this.findByIdAndRemove(id);
     return team;
+  },
+
+  async search(query) {
+    try {
+      const escapedString = escapeString(query);
+      const searchQueries = escapedString.split(' ');
+      let accSearchQueries = [];
+      let teams = [];
+      for (let i = 0; i < searchQueries.length; i++) {
+        if (!searchQueries[i]) continue;
+        const pattern = new RegExp(searchQueries[i], 'gi');
+        let query = [
+          { name: { $regex: pattern } },
+          { manager: { $regex: pattern } },
+          { homeGround: { $regex: pattern } }
+        ];
+        accSearchQueries = accSearchQueries.concat(query);
+      }
+      if (accSearchQueries.length) {
+        teams = await this.find({
+          $or: accSearchQueries
+        });
+      }
+      return teams;
+    } catch (error) {
+      throw new APIError(error);
+    }
   }
 };
 
