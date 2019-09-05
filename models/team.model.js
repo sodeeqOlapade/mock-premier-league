@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const APIError = require('../helpers/APIError');
 const response = require('../helpers/response');
+
 const TeamSchema = new mongoose.Schema(
   {
     name: {
@@ -30,7 +31,19 @@ const TeamSchema = new mongoose.Schema(
       type: Number,
       default: 0
     },
+    homeLoss: {
+      type: Number,
+      default: 0
+    },
     awayWin: {
+      type: Number,
+      default: 0
+    },
+    awayLoss: {
+      type: Number,
+      default: 0
+    },
+    goalDifference: {
       type: Number,
       default: 0
     },
@@ -47,6 +60,10 @@ const TeamSchema = new mongoose.Schema(
       default: 0
     },
     points: {
+      type: Number,
+      default: 0
+    },
+    games: {
       type: Number,
       default: 0
     },
@@ -79,7 +96,10 @@ TeamSchema.methods = {
       'homeGround',
       'leaguePosition',
       'homeWin',
+      'homeLoss',
       'awayWin',
+      'awayLoss',
+      'goalDifference',
       'win',
       'loss',
       'draw',
@@ -92,8 +112,8 @@ TeamSchema.methods = {
   },
 
   /**
-   * 
-   * @param {req.body} obj 
+   *
+   * @param {req.body} obj
    * this method does the team update
    * it's available on every instance
    */

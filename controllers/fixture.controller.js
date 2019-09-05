@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const httpStatus = require('http-status');
 const response = require('../helpers/response');
 const Fixture = require('../models/fixture.model');
+const Team = require('../models/team.model');
 
 exports.preLoad = async (req, res, next, id) => {
   try {
@@ -130,20 +131,28 @@ exports.delete = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const { home, away } = req.body;
-    if (home === away) {
-      {
-        return res.json(
-          response(
-            'Same team cannot be in home and away position',
-            null,
-            { msg: 'Same team cannot be in home and away position' },
-            httpStatus.BAD_REQUEST
-          )
-        );
-      }
-    }
+    const { home, away } = req.fixture
+
     const fixture = await req.fixture.update(req.body);
+    if (fixture.status === 'completed') {
+      let teams = await Team.find({});
+      teams = teams.sort((a, b) => {
+        if (a.points === b.points) {
+          return b.goalDifference - a.goalDifference;
+        }
+        return b.points - a.points;
+      });
+      teams = teams.map(team => team.id.toString());
+
+      const homeTeam = await Team.getById(home);
+      const awayTeam = await Team.getById(away);
+
+      homeTeam.leaguePosition = teams.indexOf(homeTeam.id.toString()) + 1;
+      awayTeam.leaguePosition = teams.indexOf(awayTeam.id.toString()) + 1;
+
+      homeTeam.save();
+      awayTeam.save();
+    }
     res.json(
       response('update succesful', fixture.transform(), null, httpStatus.OK)
     );

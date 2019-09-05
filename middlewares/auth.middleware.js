@@ -16,7 +16,7 @@ const auth = async (req, res, next) => {
     }
 
     return res.json(
-      response('Unapproved User', null, null, httpStatus.UNAUTHORIZED)
+      response('Please Login', null, null, httpStatus.UNAUTHORIZED)
     );
   } catch (error) {
     next(error);
