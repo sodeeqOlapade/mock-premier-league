@@ -30,7 +30,7 @@ exports.signup = async (req, res, next) => {
 
     res.json(
       response(
-        'User successfully created',
+        'Admin successfully created',
         user.transform(),
         null,
         httpStatus.OK,

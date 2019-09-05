@@ -6,23 +6,12 @@ const auth = require('../middlewares/auth.middleware');
 const router = express.Router();
 const validation = require('../validations/team.validation');
 const APIError = require('../helpers/APIError');
+
+
 /**
  * Authentication middleware
  */
 router.use(auth);
-
-/**
- * this middleware ensures only an admin gets
- * throught to the team route
- */
-router.use((req, res, next) => {
-  if (!req.user.isAdmin) {
-    throw new APIError({
-      message: 'Authorization Denied!'
-    });
-  }
-  next();
-});
 
 /**
  * preloads the team with the id supplied and
@@ -41,6 +30,19 @@ router.route('/').get(teamCtrl.getAll);
  * GET api/v1/team/:id
  */
 router.route('/:id').get(teamCtrl.getSingle);
+
+/**
+ * this middleware ensures only an admin gets
+ * throught to the routes below
+ */
+router.use((req, res, next) => {
+  if (!req.user.isAdmin) {
+    throw new APIError({
+      message: 'Authorization Denied!'
+    });
+  }
+  next();
+});
 
 /**
  * route to create new team

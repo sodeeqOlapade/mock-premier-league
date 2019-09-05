@@ -12,19 +12,6 @@ const APIError = require('../helpers/APIError');
 router.use(auth);
 
 /**
- * this middleware ensures only an admin gets
- * throught to the fixture route
- */
-router.use((req, res, next) => {
-  if (!req.user.isAdmin) {
-    throw new APIError({
-      message: 'Authorization Denied!'
-    });
-  }
-  next();
-});
-
-/**
  * preloads the fixture with the id supplied and
  * attaches it to req object
  */
@@ -41,6 +28,31 @@ router.route('/').get(fixtureCtrl.getAll);
  * GET api/v1/fixture/:id
  */
 router.route('/:id').get(fixtureCtrl.getSingle);
+
+/**
+ * route to GET pending fixtures
+ * GET api/v1/fixture/pending
+ */
+router.route('/pending').get(fixtureCtrl.viewPending);
+
+/**
+ * route to GET completed fixtures
+ * GET api/v1/fixture/completed
+ */
+router.route('/completed').get(fixtureCtrl.viewCompleted);
+
+/**
+ * this middleware ensures only an admin gets
+ * throught to the routes below
+ */
+router.use((req, res, next) => {
+  if (!req.user.isAdmin) {
+    throw new APIError({
+      message: 'Authorization Denied!'
+    });
+  }
+  next();
+});
 
 /**
  * route to create new fixture
