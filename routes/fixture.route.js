@@ -30,6 +30,18 @@ router.route('/').get(fixtureCtrl.getAll);
 router.route('/:id').get(fixtureCtrl.getSingle);
 
 /**
+ * route to GET pending fixtures
+ * GET api/v1/fixture/pending
+ */
+router.route('/pending').get(fixtureCtrl.viewPending);
+
+/**
+ * route to GET completed fixtures
+ * GET api/v1/fixture/completed
+ */
+router.route('/completed').get(fixtureCtrl.viewCompleted);
+
+/**
  * this middleware ensures only an admin gets
  * throught to the routes below
  */

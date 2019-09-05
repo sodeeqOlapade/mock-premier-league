@@ -117,6 +117,41 @@ exports.getSingle = async (req, res, next) => {
   }
 };
 
+exports.viewCompleted = async (req, res, next) => {
+  try {
+    let fixtures = await Fixture.find({});
+    fixtures = fixtures.filter(fixture => fixture.status === 'completed');
+    return res.json(
+      response(
+        'Request for all completed fixtures sucessful',
+        fixtures,
+        null,
+        httpStatus.OK
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+exports.viewPending = async (req, res, next) => {
+  try {
+    let fixtures = await Fixture.find({});
+    fixtures = fixtures.filter(fixture => fixture.status === 'pending');
+    return res.json(
+      response(
+        'Request for all pending fixtures sucessful',
+        fixtures,
+        null,
+        httpStatus.OK
+      )
+    );
+  } catch (error) {
+    next(error);
+  }
+};
+
 exports.delete = async (req, res, next) => {
   try {
     let deletedFixture = await Fixture.deleteOne(req.fixture._id);
@@ -131,7 +166,7 @@ exports.delete = async (req, res, next) => {
 
 exports.update = async (req, res, next) => {
   try {
-    const { home, away } = req.fixture
+    const { home, away } = req.fixture;
 
     const fixture = await req.fixture.update(req.body);
     if (fixture.status === 'completed') {
