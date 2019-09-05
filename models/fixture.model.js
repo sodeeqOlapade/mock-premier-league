@@ -78,7 +78,7 @@ const FixtureSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-FixtureSchema.pre('save', async next => {
+FixtureSchema.pre('save', async function(next) {
   if (this.status === 'completed') {
     const homeTeam = await Team.getById(this.home);
     const awayTeam = await Team.getById(this.away);
@@ -93,6 +93,9 @@ FixtureSchema.pre('save', async next => {
     homeTeam.conceded += this.awayTotalGoal;
     awayTeam.conceded += this.homeTotalGoal;
 
+    homeTeam.goalDifference = homeTeam.goals - homeTeam.conceded;
+    awayTeam.goalDifference = awayTeam.goals - awayTeam.conceded;
+
     if (this.isDraw) {
       //update draw counts on teams
       homeTeam.draw += 1;
@@ -103,7 +106,8 @@ FixtureSchema.pre('save', async next => {
       awayTeam.points += 1;
     }
 
-    if (this.winner === homeTeam._id) {
+    if (this.winner.toString() === homeTeam.id.toString()) {
+
       /**
        * update win count for home team
        * and loss count for away team
@@ -120,7 +124,8 @@ FixtureSchema.pre('save', async next => {
       awayTeam.awayLoss += 1;
     }
 
-    if (this.winner === awayTeam._id) {
+    if (this.winner.toString() === awayTeam.id.toString()) {
+
       /**
        * update win count for away team
        * and loss count for home team
@@ -136,10 +141,6 @@ FixtureSchema.pre('save', async next => {
       awayTeam.awayWin += 1;
       homeTeam.homeLoss += 1;
     }
-
-    //calculating the current position of teams
-    homeTeam.position = homeTeam.getPosition(homeTeam._id);
-    awayTeam.position = awayTeam.getPosition(awayTeam._id);
 
     homeTeam.save();
     awayTeam.save();
