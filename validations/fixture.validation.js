@@ -1,7 +1,7 @@
 const { Joi } = require('celebrate');
 
 module.exports = {
-  createOrUpdateFixture: {
+  create: {
     body: {
       home: Joi.string()
         .min(2)
@@ -27,6 +27,20 @@ module.exports = {
         .min(2)
         .max(120)
         .required(),
+      winner: Joi.string()
+        .min(2)
+        .max(120),
+      firstHalfScore: Joi.number(),
+      secondHalfScore: Joi.number(),
+      homeTotalGoal: Joi.number(),
+      awayTotalGoal: Joi.number(),
+      fullTimeScore: Joi.number(),
+      isDraw: Joi.boolean(),
+      status: Joi.string()
+    }
+  },
+  update: {
+    body: {
       winner: Joi.string()
         .min(2)
         .max(120),

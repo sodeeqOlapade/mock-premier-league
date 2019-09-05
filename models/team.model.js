@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const pick = require('ramda/src/pick');
 const APIError = require('../helpers/APIError');
 const response = require('../helpers/response');
+
 const TeamSchema = new mongoose.Schema(
   {
     name: {
@@ -39,6 +40,10 @@ const TeamSchema = new mongoose.Schema(
       default: 0
     },
     awayLoss: {
+      type: Number,
+      default: 0
+    },
+    goalDifference: {
       type: Number,
       default: 0
     },
@@ -91,7 +96,10 @@ TeamSchema.methods = {
       'homeGround',
       'leaguePosition',
       'homeWin',
+      'homeLoss',
       'awayWin',
+      'awayLoss',
+      'goalDifference',
       'win',
       'loss',
       'draw',
@@ -115,14 +123,6 @@ TeamSchema.methods = {
     }
     await this.save();
     return this;
-  },
-
-  async getPosition(id) {
-    const teams = await this.find({})
-      .sort((a, b) => b.points - a.points)
-      .map(team => team._id);
-
-    return teams.indexOf(id) + 1;
   }
 };
 

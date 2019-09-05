@@ -48,10 +48,7 @@ router.route('/:id').get(fixtureCtrl.getSingle);
  */
 router
   .route('/')
-  .post(
-    validate(validation.createOrUpdateFixture, { abortEarly: false }),
-    fixtureCtrl.create
-  );
+  .post(validate(validation.create, { abortEarly: false }), fixtureCtrl.create);
 
 /**
  * route to delete single fixture
@@ -65,9 +62,6 @@ router.route('/:id').delete(fixtureCtrl.delete);
  */
 router
   .route('/:id')
-  .put(
-    validate(validation.createOrUpdateFixture, { abortEarly: false }),
-    fixtureCtrl.update
-  );
+  .put(validate(validation.update, { abortEarly: false }), fixtureCtrl.update);
 
 module.exports = router;
