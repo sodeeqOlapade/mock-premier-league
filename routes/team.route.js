@@ -51,7 +51,7 @@ router.use((req, res, next) => {
 router
   .route('/')
   .post(
-    validate(validation.createOrUpdateTeam, { abortEarly: false }),
+    validate(validation.create, { abortEarly: false }),
     teamCtrl.create
   );
 
@@ -68,7 +68,7 @@ router.route('/:id').delete(teamCtrl.delete);
 router
   .route('/:id')
   .put(
-    validate(validation.createOrUpdateTeam, { abortEarly: false }),
+    validate(validation.update, { abortEarly: false }),
     teamCtrl.update
   );
 

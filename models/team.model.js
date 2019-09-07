@@ -151,7 +151,8 @@ TeamSchema.statics = {
   },
 
   async deleteOne(id) {
-    const team = await this.findByIdAndRemove(id);
+    const team = await this.findById(id);
+    team.isDeleted = true;
     return team;
   },
 
