@@ -1,7 +1,7 @@
 const { Joi } = require('celebrate');
 
 module.exports = {
-  createOrUpdateTeam: {
+  create: {
     body: {
       name: Joi.string()
         .min(2)
@@ -25,6 +25,18 @@ module.exports = {
       goals: Joi.number(),
       conceded: Joi.number(),
       isDeleted: Joi.boolean()
+    }
+  },
+  update: {
+    body: {
+      manager: Joi.string()
+        .min(2)
+        .max(120)
+        .required(),
+      homeGround: Joi.string()
+        .min(2)
+        .max(120)
+        .required()
     }
   }
 };
