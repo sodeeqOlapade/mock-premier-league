@@ -1,5 +1,10 @@
 const request = require('supertest');
 const app = require('../../app');
+const db = require('../../config/db');
+
+afterAll(async () => {
+  await db.dropDb();
+});
 
 describe('POST /api/v1/admin/signup', function() {
   let adminToken = null;
@@ -301,7 +306,7 @@ describe('POST /api/v1/admin/signup', function() {
       .expect(200);
     expect(createFixtureResponse2.body.statusCode).toBe(400);
     expect(createFixtureResponse2.body.message).toMatch('Bad Request');
-    expect(createFixtureResponse2.body.payload.error).toHaveProperty(
+    expect(createFixtureResponse2.body.error).toHaveProperty(
       'msg',
       'Same Fixture not allowed!'
     );

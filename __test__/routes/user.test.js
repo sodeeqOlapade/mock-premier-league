@@ -1,5 +1,11 @@
 const request = require('supertest');
 const app = require('../../app');
+const db = require('../../config/db');
+
+
+afterAll(async () => {
+  await db.dropDb();
+});
 
 describe('POST /api/v1/user/signup', function() {
   it('responds Invalid fields', function(done) {
