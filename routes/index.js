@@ -9,6 +9,17 @@ const teamCtrl = require('../controllers/team.controller');
 const router = express.Router();
 const response = require('../helpers/response');
 
+router.get('/', (req, res) =>
+  res.json(
+    response(
+      'Successful',
+      'Welcome to Mock-Premier-League',
+      null,
+      httpStatus.OK
+    )
+  )
+);
+
 //check API's sanity
 router.get('/health-check', (req, res) =>
   res.json(response('Successful', 'OK', null, httpStatus.OK))
