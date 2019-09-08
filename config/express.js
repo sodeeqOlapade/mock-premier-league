@@ -9,8 +9,33 @@ const routes = require('../routes');
 const error = require('./error');
 const logger = require('morgan');
 const { env } = require('./env');
+const redis = require('redis');
+const redisClient = redis.createClient();
+const session = require('express-session');
+const config = require('./env');
+const redisStore = require('connect-redis')(session);
 
 const app = express();
+
+redisClient.on('error', err => {
+  console.log('Redis error: ', err);
+});
+
+app.use(
+  session({
+    secret: config.jwtSecret,
+    name: 'mock_premier_league',
+    resave: false,
+    saveUninitialized: true,
+    cookie: { secure: false }, // Note that the cookie-parser module is no longer needed
+    store: new redisStore({
+      host: 'localhost',
+      port: 6379,
+      client: redisClient,
+      ttl: 1200
+    })
+  })
+);
 
 app.use(cookieParser());
 app.use(bodyParser.json());

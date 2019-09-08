@@ -70,7 +70,7 @@ UserSchema.methods = {
 
   // Generates token and return to the client
   getToken() {
-    return generateToken(this._id);
+    return `Bearer ${generateToken(this._id)}`;
   },
 
   async update(obj) {
@@ -98,7 +98,7 @@ UserSchema.statics = {
     const user = await this.getByEmail(email);
     if (password) {
       if (user && (await user.passwordMatches(password))) {
-        return { user, accessToken: `Bearer ${user.getToken()}` };
+        return { user, accessToken: user.getToken() };
       }
     }
     throw new APIError({

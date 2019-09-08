@@ -4,9 +4,9 @@
   "description": "",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
-    "start:dev": "nodemon app.js"
+    "start:dev": "nodemon app.js",
+    "test": "jest --coverage --watchAll --runInBand"
   },
   "keywords": [],
   "author": "Olapade Sodeeq Remilekun",
@@ -15,10 +15,12 @@
     "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "celebrate": "^10.0.1",
+    "connect-redis": "^4.0.2",
     "cookie-parser": "^1.4.4",
     "cors": "^2.8.5",
     "dotenv": "^8.1.0",
     "express": "^4.17.1",
+    "express-session": "^1.16.2",
     "express-winston": "^3.3.0",
     "gravatar": "^1.8.0",
     "http-status": "^1.3.2",
@@ -30,6 +32,13 @@
     "morgan": "^1.9.1",
     "nodemon": "^1.19.1",
     "ramda": "^0.26.1",
+    "redis": "^2.8.0",
+    "supertest": "^4.0.2",
     "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "@types/joi": "^14.3.3",
+    "@types/supertest": "^2.0.8"
   }
 }

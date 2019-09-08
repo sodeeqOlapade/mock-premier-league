@@ -1,8 +1,8 @@
 const app = require('./config/express');
-const connectDb = require('./config/db');
+const db = require('./config/db')
 const config = require('./config/env');
 
-connectDb(config.mongo.host);
+db.connectDb(config.mongo.host);
 
 if (process.env.NODE_ENV !== 'test') {
   //
