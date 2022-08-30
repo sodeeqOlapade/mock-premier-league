@@ -27,7 +27,7 @@
     "jest": "^24.9.0",
     "jsonwebtoken": "^8.5.1",
     "jwt-simple": "^0.5.6",
-    "moment-timezone": "^0.5.26",
+    "moment-timezone": "^0.5.35",
     "mongoose": "^5.6.11",
     "morgan": "^1.9.1",
     "nodemon": "^1.19.1",
